@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	"os"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -16,12 +17,16 @@ import (
 
 func makeTransaction() {
 	client, err := ethclient.Dial("http://127.0.0.1:7545")
-
+	content, err := os.ReadFile("data.txt")
+	if err != nil {
+		log.Fatal("Error opening the file")
+	}
+	// fmt.Println(content)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	privateKey, err := crypto.HexToECDSA("466022db4e0e2a754837dd8d2f58de12331561ebb92d1e414ad5a3e9d81f2931")
+	privateKey, err := crypto.HexToECDSA("9069f67c8525223f6dbf925282e1aa1347774d9413646e652ff589b6c8165397")
 
 	if err != nil {
 		log.Fatal(err)
@@ -39,14 +44,14 @@ func makeTransaction() {
 		log.Fatal(err)
 	}
 	value := big.NewInt(3000000000000000000)
-	gasLimit := uint64(210000)
+	gasLimit := uint64(1000000)
 	gasPrice, err := client.SuggestGasPrice(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	toAddress := common.HexToAddress("0x8775BEc3b4ce3a082B7CBdEC5998016e37dC8fd2")
-	var data []byte
+	toAddress := common.HexToAddress("0xdA586865825D904e885DaEc3E54243aB7a7aa3B7")
+	var data = content
 	tx := types.NewTransaction(nonce, toAddress, value, gasLimit, gasPrice, data)
 	signedTx, err := types.SignTx(tx, types.HomesteadSigner{}, privateKey)
 	if err != nil {
@@ -62,7 +67,7 @@ func makeTransaction() {
 }
 func main() {
 
-	var transactionCount = 15
+	var transactionCount = 4 
 	start := time.Now()
 	for i := 1; i <= transactionCount; i++ {
 		fmt.Println("\n")
