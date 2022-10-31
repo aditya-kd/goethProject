@@ -34,7 +34,7 @@ type Book struct {
 	Title       string `json:"title"`
 	Author      string `json:"author"`
 	PublishDate string `json:"publish_date"`
-	ISBN        string `json:"isbn"`
+	ISBN        string `json:"serial_number"`
 }
 
 func (b *Block) generateHash() {
